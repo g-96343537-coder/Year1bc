@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一年级生字填充练习</title>
+    <title>一年级生字填充练习 (第二组)</title>
     <style>
         body {
             font-family: 'LiHei Pro', sans-serif;
@@ -122,7 +122,7 @@
 <body>
 
 <div class="quiz-container">
-    <h1>一年级生字填充练习</h1>
+    <h1>一年级生字填充练习 (第二组)</h1>
     <div class="progress-bar"><div class="progress" id="progress"></div></div>
 
     <form id="quiz-form">
@@ -136,54 +136,54 @@
 <script>
     const quizData = [
         {
-            question: "今天是晴天，____上挂着一个大大的太阳。",
-            options: ["地", "天", "口"],
-            answer: "天"
+            question: "小妹妹把故事____完了，很开心。",
+            options: ["读", "写", "全"],
+            answer: "读"
         },
         {
-            question: "小明早上穿好衣服，准备去学____。",
-            options: ["书", "校", "歌"],
-            answer: "校"
+            question: "我们放学____，就回家了。",
+            options: ["了", "得", "是"],
+            answer: "了"
         },
         {
-            question: "我们一起手____手，在草地上玩游戏。",
-            options: ["走", "花", "牵"],
-            answer: "牵"
+            question: "小猴子在树____上跑来跑去。",
+            options: ["地", "枝", "门"],
+            answer: "枝"
         },
         {
-            question: "我____得好，老师给我一个五角星。",
-            options: ["这", "画", "来"],
-            answer: "画"
+            question: "早上起来，大家一起____广播体操。",
+            options: ["跳", "做", "跑"],
+            answer: "做"
         },
         {
-            question: "春天来了，五颜六色的____开了。",
-            options: ["花", "草", "枝"],
-            answer: "花"
+            question: "我们都要成为一个有爱____的孩子。",
+            options: ["妈", "心", "声"],
+            answer: "心"
         },
         {
-            question: "小____在树枝上唱歌。",
-            options: ["鸟", "朋", "姐"],
-            answer: "鸟"
+            question: "听____事，可以学到很多知识。",
+            options: ["儿", "故", "笔"],
+            answer: "故"
         },
         {
-            question: "晚上，我可以看到很多____星。",
-            options: ["全", "字", "星"],
-            answer: "星"
-        },
-        {
-            question: "我要认真____字，把字写得漂亮。",
-            options: ["做", "写", "跑"],
+            question: "我把功课都____完了，可以玩了。",
+            options: ["写", "长", "要"],
             answer: "写"
         },
         {
-            question: "我们是好____友，天天一起玩。",
-            options: ["妈", "朋", "爸"],
+            question: "我的____妈给我买了一件新衣服。",
+            options: ["妈", "姐", "哥"],
+            answer: "妈"
+        },
+        {
+            question: "我们都是好____友。",
+            options: ["中", "朋", "三"],
             answer: "朋"
         },
         {
-            question: "爸爸____着对我说：“你真棒！”",
-            options: ["笑", "要", "全"],
-            answer: "笑"
+            question: "看到老师，我们要大____问好。",
+            options: ["声", "近", "笑"],
+            answer: "声"
         }
     ];
 
@@ -196,7 +196,9 @@
 
     function loadQuestion() {
         if (currentQuestionIndex >= quizData.length) {
-            form.innerHTML = `<p style="text-align: center;">🎉 恭喜你，完成了所有题目！</p>`;
+            // 确保进度条达到100%
+            progressBar.style.width = '100%';
+            form.innerHTML = `<p style="text-align: center; font-weight: bold; font-size: 24px;">🎉 恭喜你，完成了所有题目！</p>`;
             submitButton.classList.add('hidden');
             nextButton.classList.add('hidden');
             return;
@@ -241,7 +243,6 @@
 
         const userAnswer = selectedOption.value;
         const correctAnswer = quizData[currentQuestionIndex].answer;
-        const questionText = quizData[currentQuestionIndex].question;
 
         if (userAnswer === correctAnswer) {
             feedback.innerHTML = `✅ 恭喜你，答对了！正确答案是：${correctAnswer}`;
