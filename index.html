@@ -113,6 +113,10 @@
     <div id="name-page">
         <div class="question">请输入你的名字：</div>
         <input id="student-name" type="text" style="width:100%; padding:10px; font-size:18px; border-radius:8px; border:1px solid #ddd;">
+
+        <div class="question" style="margin-top:20px;">请输入你的班级：</div>
+        <input id="student-class" type="text" style="width:100%; padding:10px; font-size:18px; border-radius:8px; border:1px solid #ddd;">
+
         <button class="submit-btn" id="start-button">开始练习</button>
     </div>
 
@@ -139,6 +143,7 @@
 
     let currentQuestionIndex = 0;
     let studentName = "";
+    let studentClass = "";
     let correctCount = 0;
 
     const namePage = document.getElementById("name-page");
@@ -153,10 +158,11 @@
 
     startButton.addEventListener("click", () => {
         studentName = nameInput.value.trim();
-        if (studentName === "") {
-            alert("请输入名字！");
-            return;
-        }
+        studentClass = document.getElementById("student-class").value.trim();
+
+        if (studentName === "") { alert("请输入名字！"); return; }
+        if (studentClass === "") { alert("请输入班级！"); return; }
+
         namePage.classList.add("hidden");
         form.classList.remove("hidden");
         loadQuestion();
@@ -177,15 +183,9 @@
         `;
 
         feedback.classList.add("hidden");
-
         submitButton.classList.remove("hidden");
 
-        if (currentQuestionIndex === quizData.length - 1) {
-            nextButton.textContent = "完成";
-        } else {
-            nextButton.textContent = "下一题";
-        }
-
+        nextButton.textContent = (currentQuestionIndex === quizData.length - 1) ? "完成" : "下一题";
         nextButton.classList.add("hidden");
 
         updateProgress();
@@ -209,7 +209,6 @@
         const userAnswer = selected.value;
         const correct = quizData[currentQuestionIndex].answer;
 
-        // 移除旧的反馈颜色类
         feedback.classList.remove("correct", "incorrect");
 
         if (userAnswer === correct) {
@@ -226,45 +225,37 @@
         nextButton.classList.remove("hidden");
     }
 
-    // ⭐ 新增函数：发送分数到 Google Apps Script
+    // ⭐ 发送分数到 Google Apps Script（包含班级）
     function sendScoreToGoogleSheet(name, score) {
-        // 您提供的 Web 应用网址
         const webAppUrl = "https://script.google.com/macros/s/AKfycbyTgPKaxBh96oCuArf-2K8q_pV8njuNOtArPjvJ_IGQ9ppnAzwrFYTc04w1XBQ1V3uSaw/exec";
         
         const data = {
             name: name,
+            class: studentClass, 
             score: score
         };
 
         fetch(webAppUrl, {
             method: 'POST',
-            mode: 'no-cors', // 必须使用 'no-cors'，因为是跨域请求
+            mode: 'no-cors',
             cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-        .then(() => {
-            console.log("成绩发送尝试完成。");
-        })
-        .catch(error => {
-            console.error('发送成绩时发生错误:', error);
-        });
+        .then(() => console.log("成绩已尝试发送。"))
+        .catch(error => console.error('发送成绩错误:', error));
     }
 
     function nextQuestion() {
         currentQuestionIndex++;
 
         if (currentQuestionIndex === quizData.length) {
-            
-            // ⭐ 调用新的函数，发送名字和分数
             sendScoreToGoogleSheet(studentName, correctCount);
 
-            /* 修正点：进入恭喜页面前清除答题提示 */
             feedback.classList.add("hidden");
 
-            form.innerHTML = `<p style="text-align:center;">🎉 恭喜 <strong>${studentName}</strong> ，你答对了 <span style="color:green;">${correctCount}</span> 题，继续加油！</p>
+            form.innerHTML = `
+                <p style="text-align:center;">🎉 恭喜 <strong>${studentName}</strong> （${studentClass}），你答对了 <span style="color:green;">${correctCount}</span> 题，继续加油！</p>
                 <p style="text-align:center; font-size:16px; color:#555;">（成绩已提交到老师的记录中）</p>
             `;
             nextButton.classList.add("hidden");
